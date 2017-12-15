@@ -5948,9 +5948,14 @@ Local<String> String::NewFromOneByte(Isolate* isolate,
                                      const uint8_t* data,
                                      NewStringType type,
                                      int length) {
+  std::vector<uint8_t> newdata(length < 0 ? strlen((const char*)data) + 1 : length);
+  std::transform(data, data + newdata.size(), newdata.begin(), [](char c) -> char {
+    __e2a_l(&c, 1);
+    return c;
+  });
   RETURN_TO_LOCAL_UNCHECKED(
       NewString(isolate, u8"v8::String::NewFromOneByte()",
-                u8"String::NewFromOneByte", data,
+                u8"String::NewFromOneByte", &newdata[0],
                 static_cast<v8::NewStringType>(type), length),
       String);
 }
@@ -5958,8 +5963,13 @@ Local<String> String::NewFromOneByte(Isolate* isolate,
 
 MaybeLocal<String> String::NewFromOneByte(Isolate* isolate, const uint8_t* data,
                                           v8::NewStringType type, int length) {
+  std::vector<uint8_t> newdata(length < 0 ? strlen((const char*)data) + 1 : length);
+  std::transform(data, data + newdata.size(), newdata.begin(), [](char c) -> char {
+    __e2a_l(&c, 1);
+    return c;
+  });
   return NewString(isolate, u8"v8::String::NewFromOneByte()",
-                   u8"String::NewFromOneByte", data, type, length);
+                   u8"String::NewFromOneByte", &newdata[0], type, length);
 }
 
 
