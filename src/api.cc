@@ -5930,17 +5930,37 @@ Local<String> String::NewFromUtf8(Isolate* isolate,
                                   const char* data,
                                   NewStringType type,
                                   int length) {
+#if 0
+  FILE * jbar = fopen("jbar.log", "a");
+  fprintf(jbar, "JBAR NewFromUtf8 length=%d, %.*s\n", length, length > 0 ? length : strlen(data), data);
+  fclose(jbar);
+#endif
+  std::vector<char> newdata(length < 0 ? strlen((const char*)data) + 1 : length);
+  std::transform(data, data + newdata.size(), newdata.begin(), [](char c) -> char {
+    __e2a_l(&c, 1);
+    return c;
+  });
   RETURN_TO_LOCAL_UNCHECKED(
       NewString(isolate, u8"v8::String::NewFromUtf8()", u8"String::NewFromUtf8",
-                data, static_cast<v8::NewStringType>(type), length),
+                &newdata[0], static_cast<v8::NewStringType>(type), length),
       String);
 }
 
 
 MaybeLocal<String> String::NewFromUtf8(Isolate* isolate, const char* data,
                                        v8::NewStringType type, int length) {
+#if 0
+  FILE * jbar = fopen("jbar.log", "a");
+  fprintf(jbar, "JBAR NewFromUtf8 length=%d, %.*s\n", length, length > 0 ? length : strlen(data), data);
+  fclose(jbar);
+#endif
+  std::vector<char> newdata(length < 0 ? strlen((const char*)data) + 1 : length);
+  std::transform(data, data + newdata.size(), newdata.begin(), [](char c) -> char {
+    __e2a_l(&c, 1);
+    return c;
+  });
   return NewString(isolate, u8"v8::String::NewFromUtf8()", u8"String::NewFromUtf8",
-                   data, type, length);
+                   &newdata[0], type, length);
 }
 
 
@@ -5948,6 +5968,11 @@ Local<String> String::NewFromOneByte(Isolate* isolate,
                                      const uint8_t* data,
                                      NewStringType type,
                                      int length) {
+#if 0
+  FILE * jbar = fopen("jbar.log", "a");
+  fprintf(jbar, "JBAR NewFromUtf8 length=%d, %.*s\n", length, length > 0 ? length : strlen((const char*)data), data);
+  fclose(jbar);
+#endif
   std::vector<uint8_t> newdata(length < 0 ? strlen((const char*)data) + 1 : length);
   std::transform(data, data + newdata.size(), newdata.begin(), [](char c) -> char {
     __e2a_l(&c, 1);
@@ -5963,6 +5988,11 @@ Local<String> String::NewFromOneByte(Isolate* isolate,
 
 MaybeLocal<String> String::NewFromOneByte(Isolate* isolate, const uint8_t* data,
                                           v8::NewStringType type, int length) {
+#if 0
+  FILE * jbar = fopen("jbar.log", "a");
+  fprintf(jbar, "JBAR NewFromUtf8 length=%d, %.*s\n", length, length > 0 ? length : strlen((const char*)data), data);
+  fclose(jbar);
+#endif
   std::vector<uint8_t> newdata(length < 0 ? strlen((const char*)data) + 1 : length);
   std::transform(data, data + newdata.size(), newdata.begin(), [](char c) -> char {
     __e2a_l(&c, 1);
