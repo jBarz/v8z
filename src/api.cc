@@ -540,12 +540,31 @@ StartupData V8::WarmUpSnapshotDataBlob(StartupData cold_snapshot_blob,
 
 
 void V8::SetFlagsFromString(const char* str, int length) {
-  i::FlagList::SetFlagsFromString(str, length);
+  std::vector<char> ebcdic(length);
+  std::transform(str, str + length, ebcdic.begin(),  [](char c) -> char {
+    __e2a_l(&c, 1);
+    return c;
+  });
+  i::FlagList::SetFlagsFromString(&ebcdic[0], length);
 }
 
 
 void V8::SetFlagsFromCommandLine(int* argc, char** argv, bool remove_flags) {
+  int largc = *argc;
+  std::vector<char*> largv(argv, argv + largc);
+  for(int i = 0; i < largc; ++i) {
+    std::transform(largv[i], largv[i] + strlen(largv[i]), largv[i], [](char c) -> char {
+      __e2a_l(&c, 1);
+      return c;
+    });
+  }
   i::FlagList::SetFlagsFromCommandLine(argc, argv, remove_flags);
+  for(int i = 0; i < largc; ++i) {
+    std::transform(largv[i], largv[i] + strlen(largv[i]), largv[i], [](char c) -> char {
+      __a2e_l(&c, 1);
+      return c;
+    });
+  }
 }
 
 
