@@ -8023,6 +8023,7 @@ String::Utf8Value::Utf8Value(v8::Local<v8::Value> obj)
   length_ = v8::Utf8Length(*i_str, isolate);
   str_ = i::NewArray<char>(length_ + 1);
   str->WriteUtf8(str_);
+  __a2e_l(&str_[0], length_);
 }
 
 
